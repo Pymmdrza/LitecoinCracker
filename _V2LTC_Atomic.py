@@ -61,11 +61,11 @@ while True:
     table.add_column("WiN: " + str(w), justify="right", style="green_yellow bold", no_wrap=True)
     table.add_column("Datails", style="green_yellow", no_wrap=True)
     table.add_column("Balance", style="gold1", no_wrap=True)
-    table.add_row(str('LTC-P2PKH'), str(addr), str(ltcp2pkh_bal))
+    table.add_row(str('LTC-P2PKH'), str(ltcp2pkh), str(ltcp2pkh_bal))
     table.add_row(str('LTC-P2SH'), str(ltcp2sh), str(ltcp2sh_bal))
     table.add_row(str('LTC-P2WPKH'), str(ltcp2wpkh), str(ltcp2wpkh_bal))
     table.add_row(str('LTC-P2WSH'), str(ltcp2wsh), str(ltcp2wsh_bal))
-    table.add_row(str('PRIVATE KEY'), str(privx), str(z))
+    table.add_row(str('PRIVATE KEY'), str(PRIVATE_KEY), str(z))
     # ============================
     if str(ltcp2pkh_bal) != '0' or str(ltcp2wpkh_bal) != '0' or str(ltcp2sh_bal) != '0' or str(ltcp2wsh_bal) != '0':
         w += 1
