@@ -1,6 +1,6 @@
 # Litecoin Private Key Cracker
 
-Litecoin Private key generated and convert to p2pkh , p2wpkh , p2sh , p2wsh address and check balance per address . if value (balance) > 0 save all detail's to text file (in v2: `Found_Ltc.txt`) . for running after download install package's :
+Litecoin Private key generated and convert to `p2pkh` , `p2wpkh` , `p2sh` , `p2wsh` address and check balance per address . if value (balance) > 0 save all detail's to text file (in v2: `Found_Ltc.txt`) . for running after download install package's :
 
 ```
 pip install hdwallet
