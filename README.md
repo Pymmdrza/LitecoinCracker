@@ -28,12 +28,12 @@ $ pip3 install -r requirements.txt
 ![Litecoin Private Key Cracker](https://raw.githubusercontent.com/Pymmdrza/LitecoinCracker/mainx/_m/ScreenRecord_LtcCracker_v2.gif 'Litecoin Private Key Cracker
 ')
 
-Google Colab For : LitecoinCracker V2 : [Run Now](https://colab.research.google.com/drive/1QRvE-rWTKS0Fia-MTHVrY2TPWhsJDWg-?usp=sharing)
+Google Colab For : LitecoinCracker V2 : [Run Now](https://colab.research.google.com/drive/1QRvE-rWTKS0Fia-MTHVrY2TPWhsJDWg-?usp=sharing 'Google Colab Notebook For Litecoin Private Key Cracker and Check Balance Address Wallet')
 
 ### Screenshot From V1 (With exclusive Node Api in Local Network - in this node for running in local for checking value per address request and response very fast.) :
 
 
-![](https://github.com/Pymmdrza/LitecoinCracker/raw/mainx/ltc-all.JPG)
+![Crack And Hunting Litecoin Private Key For Address Wallet LTC EXLUSIVE API](https://raw.githubusercontent.com/Pymmdrza/LitecoinCracker/mainx/_m/ltc-all.JPG 'Crack And Hunting Litecoin Private Key For Address Wallet LTC')
 
 
 Crack and hunting privatekey litecoin (LTC) On Exclusive Node
