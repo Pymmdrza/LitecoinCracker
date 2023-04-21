@@ -4,15 +4,11 @@
 #              ||- ╩ ╩╩ ╩═╩╝╩╚═╚═╝╩ ╩o╚═╝╚═╝╩ ╩ -||
 #              ||--------------------------------||
 #              ||-| WebSite : Mmdrza.Com        -||
-#              ||-| Mail : X4@Mmdrza.Com        -||
-#              ||-| Telegram : @PyMmdrza        -||
+#              ||-| Mail : Pymmdrza@Gmail.com   -||
+#              ||-| Telegram : @MrPyMmdrza      -||
 #              ||-| Github.Com/PyMmdrza         -||
-#              ||-| PythonWithMmdrza.Medium.Com -||
+#              ||-| mdrza.Medium.Com            -||
 #              ||================================||
-#              ||================================||
-#              ||================================||
-
-
 import random
 import requests
 from hdwallet import HDWallet
@@ -29,7 +25,7 @@ def getGenKey():
         e += f"{k}"
     return e
 
-
+# Thanks From konstantin (admin atomicwallet)
 def getBal(address):
     url_link = f"https://litecoin.atomicwallet.io/api/v2/address/{address}"
     r = requests.get(url_link).json()
