@@ -9,6 +9,19 @@ pip install rich
 sudo apt-get update&&sudo apt-get upgrade -y&&pip3 install rich&&pip3 install hdwallet
 ```
 
+another method for running this script and install package's :
+```bash
+$ git clone https://github.com/Pymmdrza/LitecoinCracker
+$ pip install -r requirements.txt
+```
+Linux :
+
+```shell
+$ git clone https://github.com/Pymmdrza/LitecoinCracker
+$ pip3 install -r requirements.txt
+
+```
+
 
 ### Screen Record From V2 :
 
