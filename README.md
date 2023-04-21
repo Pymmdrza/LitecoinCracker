@@ -15,6 +15,8 @@ sudo apt-get update&&sudo apt-get upgrade -y&&pip3 install rich&&pip3 install hd
 ![Litecoin Private Key Cracker](https://raw.githubusercontent.com/Pymmdrza/LitecoinCracker/mainx/_m/ScreenRecord_LtcCracker_v2.gif 'Litecoin Private Key Cracker
 ')
 
+Google Colab For : LitecoinCracker V2 : [Run Now](https://colab.research.google.com/drive/1QRvE-rWTKS0Fia-MTHVrY2TPWhsJDWg-?usp=sharing)
+
 ### Screenshot From V1 (With exclusive Node Api in Local Network - in this node for running in local for checking value per address request and response very fast.) :
 
 
