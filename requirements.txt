@@ -1,2 +1,2 @@
-hdwallet==2.2.1
+hdwallet==3.6.1
 rich==13.3.3
