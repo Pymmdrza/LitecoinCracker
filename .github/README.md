@@ -30,7 +30,6 @@ A high-performance, asynchronous Litecoin address generator and balance checker 
 
 Litecoin Wallet Scanner is a professional-grade tool designed to generate random Litecoin wallets and check their balances across multiple address formats. The application leverages asynchronous programming patterns to maximize throughput while maintaining responsible API usage through rate limiting and connection pooling.
 
-
 ---
 
 ## Features
@@ -167,6 +166,12 @@ pip install -r requirements.txt
 
 ```bash
 python lite-all.py
+```
+
+## Easy Install
+
+```bash
+curl -sSL https://raw.githubusercontent.com/Pymmdrza/LitecoinCracker/refs/heads/mainx/scripts/install.sh | bash
 ```
 
 ### Stopping the Scanner
