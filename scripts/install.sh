@@ -19,7 +19,7 @@ NC='\033[0m' # No Color
 # Configuration
 REPO_URL="https://github.com/Pymmdrza/LitecoinCracker.git"
 REPO_NAME="LitecoinCracker"
-MAIN_SCRIPT="lite-all.py"
+MAIN_SCRIPT="litecoin_cracker.py"
 
 # ============================================================================
 # Helper Functions
@@ -157,24 +157,58 @@ clone_repository() {
 install_requirements() {
     log_info "Installing Python dependencies..."
     
+    if [ ! -f "requirements.txt" ]; then
+        log_warning "requirements.txt not found, skipping dependency installation"
+        return 0
+    fi
+    
     PIP_ARGS=""
     
-    # Check if we need --break-system-packages (Python 3.11+ on some systems)
-    if [ "$EUID" -ne 0 ]; then
-        # Check Python version for PEP 668 compatibility
-        PYTHON_MINOR=$($PYTHON_CMD -c 'import sys; print(sys.version_info.minor)' 2>/dev/null || echo "0")
-        if [ "$PYTHON_MINOR" -ge 11 ]; then
-            PIP_ARGS="--break-system-packages"
-        fi
+    # Check for PEP 668 externally-managed environment
+    # This affects Python 3.11+ on Debian, Ubuntu, Kali, Fedora, etc.
+    if [ -f "/usr/lib/python3/EXTERNALLY-MANAGED" ] || \
+       [ -f "/usr/lib/python3.11/EXTERNALLY-MANAGED" ] || \
+       [ -f "/usr/lib/python3.12/EXTERNALLY-MANAGED" ] || \
+       [ -f "/usr/lib/python3.13/EXTERNALLY-MANAGED" ]; then
+        PIP_ARGS="--break-system-packages"
+        log_warning "Detected externally-managed environment, using --break-system-packages"
     fi
     
-    # Install requirements
-    if [ -f "requirements.txt" ]; then
-        $PIP_CMD install $PIP_ARGS -r requirements.txt -q
+    # Try installing with pip
+    if $PIP_CMD install $PIP_ARGS -r requirements.txt -q 2>/dev/null; then
         log_success "Dependencies installed successfully"
-    else
-        log_warning "requirements.txt not found, skipping dependency installation"
+        return 0
     fi
+    
+    # If failed, try with --break-system-packages as fallback
+    log_warning "Standard pip install failed, retrying with --break-system-packages..."
+    if $PIP_CMD install --break-system-packages -r requirements.txt -q 2>/dev/null; then
+        log_success "Dependencies installed successfully"
+        return 0
+    fi
+    
+    # If still failed, try with --user flag
+    log_warning "Retrying with --user flag..."
+    if $PIP_CMD install --user -r requirements.txt -q 2>/dev/null; then
+        log_success "Dependencies installed successfully (user installation)"
+        return 0
+    fi
+    
+    # Final fallback: create virtual environment
+    log_warning "System pip installation failed. Creating virtual environment..."
+    if $PYTHON_CMD -m venv .venv 2>/dev/null; then
+        source .venv/bin/activate 2>/dev/null || . .venv/bin/activate
+        pip install -r requirements.txt -q
+        log_success "Dependencies installed in virtual environment"
+        log_info "Virtual environment created at: $(pwd)/.venv"
+        PYTHON_CMD="$(pwd)/.venv/bin/python"
+        return 0
+    fi
+    
+    log_error "Failed to install dependencies. Please install manually:"
+    echo "  Option 1: pip install --break-system-packages -r requirements.txt"
+    echo "  Option 2: python3 -m venv .venv && source .venv/bin/activate && pip install -r requirements.txt"
+    exit 1
 }
 
 setup_permissions() {
