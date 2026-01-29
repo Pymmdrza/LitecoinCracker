@@ -162,52 +162,83 @@ install_requirements() {
         return 0
     fi
     
-    PIP_ARGS=""
+    # Disable exit on error for this function (we handle errors manually)
+    set +e
     
     # Check for PEP 668 externally-managed environment
     # This affects Python 3.11+ on Debian, Ubuntu, Kali, Fedora, etc.
-    if [ -f "/usr/lib/python3/EXTERNALLY-MANAGED" ] || \
-       [ -f "/usr/lib/python3.11/EXTERNALLY-MANAGED" ] || \
-       [ -f "/usr/lib/python3.12/EXTERNALLY-MANAGED" ] || \
-       [ -f "/usr/lib/python3.13/EXTERNALLY-MANAGED" ]; then
-        PIP_ARGS="--break-system-packages"
-        log_warning "Detected externally-managed environment, using --break-system-packages"
+    EXTERNALLY_MANAGED=false
+    for pyver in "" ".11" ".12" ".13" ".14"; do
+        if [ -f "/usr/lib/python3${pyver}/EXTERNALLY-MANAGED" ]; then
+            EXTERNALLY_MANAGED=true
+            break
+        fi
+    done
+    
+    # Method 1: Try with --break-system-packages first if externally managed
+    if [ "$EXTERNALLY_MANAGED" = true ]; then
+        log_warning "Detected externally-managed environment (PEP 668)"
+        log_info "Attempting installation with --break-system-packages..."
+        $PIP_CMD install --break-system-packages -r requirements.txt -q 2>&1
+        if [ $? -eq 0 ]; then
+            log_success "Dependencies installed successfully"
+            set -e
+            return 0
+        fi
     fi
     
-    # Try installing with pip
-    if $PIP_CMD install $PIP_ARGS -r requirements.txt -q 2>/dev/null; then
+    # Method 2: Try standard pip install
+    log_info "Trying standard pip install..."
+    $PIP_CMD install -r requirements.txt -q 2>&1
+    if [ $? -eq 0 ]; then
         log_success "Dependencies installed successfully"
+        set -e
         return 0
     fi
     
-    # If failed, try with --break-system-packages as fallback
-    log_warning "Standard pip install failed, retrying with --break-system-packages..."
-    if $PIP_CMD install --break-system-packages -r requirements.txt -q 2>/dev/null; then
+    # Method 3: Force --break-system-packages as fallback
+    log_warning "Standard install failed, forcing --break-system-packages..."
+    $PIP_CMD install --break-system-packages -r requirements.txt -q 2>&1
+    if [ $? -eq 0 ]; then
         log_success "Dependencies installed successfully"
+        set -e
         return 0
     fi
     
-    # If still failed, try with --user flag
-    log_warning "Retrying with --user flag..."
-    if $PIP_CMD install --user -r requirements.txt -q 2>/dev/null; then
+    # Method 4: Try --user installation
+    log_warning "Trying user installation..."
+    $PIP_CMD install --user -r requirements.txt -q 2>&1
+    if [ $? -eq 0 ]; then
         log_success "Dependencies installed successfully (user installation)"
+        set -e
         return 0
     fi
     
-    # Final fallback: create virtual environment
-    log_warning "System pip installation failed. Creating virtual environment..."
-    if $PYTHON_CMD -m venv .venv 2>/dev/null; then
-        source .venv/bin/activate 2>/dev/null || . .venv/bin/activate
-        pip install -r requirements.txt -q
-        log_success "Dependencies installed in virtual environment"
-        log_info "Virtual environment created at: $(pwd)/.venv"
-        PYTHON_CMD="$(pwd)/.venv/bin/python"
-        return 0
+    # Method 5: Create virtual environment as final fallback
+    log_warning "All pip methods failed. Creating virtual environment..."
+    $PYTHON_CMD -m venv .venv 2>&1
+    if [ $? -eq 0 ]; then
+        log_info "Activating virtual environment..."
+        . .venv/bin/activate 2>/dev/null || source .venv/bin/activate 2>/dev/null
+        .venv/bin/pip install -r requirements.txt -q 2>&1
+        if [ $? -eq 0 ]; then
+            log_success "Dependencies installed in virtual environment"
+            log_info "Virtual environment location: $(pwd)/.venv"
+            PYTHON_CMD="$(pwd)/.venv/bin/python"
+            PIP_CMD="$(pwd)/.venv/bin/pip"
+            set -e
+            return 0
+        fi
     fi
     
-    log_error "Failed to install dependencies. Please install manually:"
-    echo "  Option 1: pip install --break-system-packages -r requirements.txt"
-    echo "  Option 2: python3 -m venv .venv && source .venv/bin/activate && pip install -r requirements.txt"
+    # Re-enable exit on error
+    set -e
+    
+    log_error "Failed to install dependencies after all attempts."
+    log_info "Manual installation options:"
+    echo "  1. pip install --break-system-packages -r requirements.txt"
+    echo "  2. python3 -m venv .venv && source .venv/bin/activate && pip install -r requirements.txt"
+    echo "  3. pipx install <package>"
     exit 1
 }
 
