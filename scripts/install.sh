@@ -141,8 +141,8 @@ clone_repository() {
     
     if [ -d "$REPO_NAME" ]; then
         log_warning "Directory '$REPO_NAME' already exists"
-        read -p "Do you want to remove and re-clone? (y/n): " -n 1 -r
-        echo
+        echo -e -n "${CYAN}Do you want to remove and re-clone? (y/n): ${NC}"
+        read -r REPLY < /dev/tty
         if [[ $REPLY =~ ^[Yy]$ ]]; then
             rm -rf "$REPO_NAME"
         else
@@ -327,10 +327,10 @@ main() {
     
     print_usage
     
-    # Ask to run
+    # Ask to run - read from /dev/tty to work with curl | bash
     echo ""
-    echo -e "${CYAN}Would you like to run LitecoinCracker now? (y/n):${NC} "
-    read -r REPLY
+    echo -e -n "${CYAN}Would you like to run LitecoinCracker now? (y/n): ${NC}"
+    read -r REPLY < /dev/tty
     
     if [[ $REPLY =~ ^[Yy]$ ]] || [[ $REPLY =~ ^[Yy][Ee][Ss]$ ]]; then
         echo ""
