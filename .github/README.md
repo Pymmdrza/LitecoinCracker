@@ -21,6 +21,7 @@ A high-performance, asynchronous Litecoin address generator and balance checker 
 - [Technical Details](#technical-details 'Technical Details Litecoin Cracker')
 - [License](#license 'MIT License')
 - [Contact](#contact 'Contact')
+- [Donations](#donations 'Donations Litecoin Scanner Programmer')
 
 ---
 
@@ -81,30 +82,30 @@ The application follows a modular architecture with clear separation of concerns
 │                    (Main Orchestrator)                          │
 ├─────────────────────────────────────────────────────────────────┤
 │                                                                 │
-│  ┌─────────────┐  ┌─────────────┐  ┌─────────────────────────┐ │
-│  │ IBlockchain │  │  IWallet    │  │     IResultWriter       │ │
-│  │    API      │  │  Generator  │  │                         │ │
-│  └──────┬──────┘  └──────┬──────┘  └───────────┬─────────────┘ │
-│         │                │                     │               │
-│  ┌──────┴──────┐  ┌──────┴──────┐  ┌───────────┴─────────────┐ │
-│  │ LitecoinAPI │  │  Litecoin   │  │    FileResultWriter     │ │
-│  │             │  │  Wallet     │  │                         │ │
-│  │             │  │  Generator  │  │                         │ │
-│  └─────────────┘  └─────────────┘  └─────────────────────────┘ │
+│  ┌─────────────┐  ┌─────────────┐  ┌─────────────────────────┐  │
+│  │ IBlockchain │  │  IWallet    │  │     IResultWriter       │  │
+│  │    API      │  │  Generator  │  │                         │  │
+│  └──────┬──────┘  └──────┬──────┘  └───────────┬─────────────┘  │
+│         │                │                     │                │
+│  ┌──────┴──────┐  ┌──────┴──────┐  ┌───────────┴─────────────┐  │
+│  │ LitecoinAPI │  │  Litecoin   │  │    FileResultWriter     │  │
+│  │             │  │  Wallet     │  │                         │  │
+│  │             │  │  Generator  │  │                         │  │
+│  └─────────────┘  └─────────────┘  └─────────────────────────┘  │
 │                                                                 │
 └─────────────────────────────────────────────────────────────────┘
 ```
 
 ### Key Components
 
-| Component | Responsibility |
-|-----------|----------------|
-| `Config` | Centralized configuration management |
-| `LitecoinAPI` | Blockchain API interactions with retry logic |
-| `LitecoinWalletGenerator` | Private key and address generation |
-| `FileResultWriter` | Persistent storage of results |
-| `DisplayManager` | Terminal UI rendering |
-| `LitecoinScanner` | Main application orchestration |
+| Component                 | Responsibility                               |
+|---------------------------|----------------------------------------------|
+| `Config`                  | Centralized configuration management         |
+| `LitecoinAPI`             | Blockchain API interactions with retry logic |
+| `LitecoinWalletGenerator` | Private key and address generation           |
+| `FileResultWriter`        | Persistent storage of results                |
+| `DisplayManager`          | Terminal UI rendering                        |
+| `LitecoinScanner`         | Main application orchestration               |
 
 ---
 
@@ -116,11 +117,11 @@ The application follows a modular architecture with clear separation of concerns
 
 ### Python Dependencies
 
-| Package | Version | Purpose |
-|---------|---------|---------|
-| `aiohttp` | >= 3.8.0 | Asynchronous HTTP client |
-| `libcrypto` | >= 1.0.0 | Cryptocurrency wallet generation |
-| `rich` | >= 13.0.0 | Terminal UI rendering |
+| Package     | Version   | Purpose                          |
+|-------------|-----------|----------------------------------|
+| `aiohttp`   | >= 3.8.0  | Asynchronous HTTP client         |
+| `libcrypto` | >= 1.0.0  | Cryptocurrency wallet generation |
+| `rich`      | >= 13.0.0 | Terminal UI rendering            |
 
 ---
 
@@ -202,15 +203,15 @@ class Config:
 
 ### Configuration Parameters
 
-| Parameter | Type | Default | Description |
-|-----------|------|---------|-------------|
-| `API_BASE_URL` | str | Atomic Wallet API | Blockchain explorer API endpoint |
-| `API_TIMEOUT` | int | 10 | HTTP request timeout in seconds |
-| `API_RETRY_ATTEMPTS` | int | 3 | Maximum retry attempts for failed requests |
-| `API_RETRY_DELAY` | float | 1.0 | Base delay between retries (seconds) |
-| `MAX_CONCURRENT_REQUESTS` | int | 4 | Maximum parallel API requests |
-| `REQUEST_DELAY` | float | 0.25 | Delay between consecutive wallet scans |
-| `OUTPUT_DIR` | Path | output | Directory for output files |
+| Parameter                 | Type  | Default           | Description                                |
+|---------------------------|-------|-------------------|--------------------------------------------|
+| `API_BASE_URL`            | str   | Atomic Wallet API | Blockchain explorer API endpoint           |
+| `API_TIMEOUT`             | int   | 10                | HTTP request timeout in seconds            |
+| `API_RETRY_ATTEMPTS`      | int   | 3                 | Maximum retry attempts for failed requests |
+| `API_RETRY_DELAY`         | float | 1.0               | Base delay between retries (seconds)       |
+| `MAX_CONCURRENT_REQUESTS` | int   | 4                 | Maximum parallel API requests              |
+| `REQUEST_DELAY`           | float | 0.25              | Delay between consecutive wallet scans     |
+| `OUTPUT_DIR`              | Path  | output            | Directory for output files                 |
 
 ---
 
@@ -268,11 +269,11 @@ ltc-scanner/
 
 ### Supported Address Types
 
-| Type | Prefix | Description |
-|------|--------|-------------|
-| P2PKH | L | Pay-to-Public-Key-Hash (Legacy) |
-| P2SH-P2WPKH | M | Pay-to-Script-Hash wrapped SegWit |
-| P2WPKH | ltc1 | Native SegWit (Bech32) |
+| Type        | Prefix | Description                       |
+|-------------|--------|-----------------------------------|
+| P2PKH       | L      | Pay-to-Public-Key-Hash (Legacy)   |
+| P2SH-P2WPKH | M      | Pay-to-Script-Hash wrapped SegWit |
+| P2WPKH      | ltc1   | Native SegWit (Bech32)            |
 
 ### API Integration
 
@@ -297,12 +298,12 @@ The scanner uses the Atomic Wallet blockchain explorer API for balance checking.
 
 ### Error Handling Strategy
 
-| Error Type | Handling Approach |
-|------------|-------------------|
-| Network Timeout | Retry with exponential backoff |
-| API Rate Limit | Configurable delay between requests |
-| Invalid Response | Log error, continue scanning |
-| Keyboard Interrupt | Graceful shutdown with summary |
+| Error Type         | Handling Approach                   |
+|--------------------|-------------------------------------|
+| Network Timeout    | Retry with exponential backoff      |
+| API Rate Limit     | Configurable delay between requests |
+| Invalid Response   | Log error, continue scanning        |
+| Keyboard Interrupt | Graceful shutdown with summary      |
 
 ---
 
@@ -310,11 +311,11 @@ The scanner uses the Atomic Wallet blockchain explorer API for balance checking.
 
 Under optimal conditions, the scanner achieves:
 
-| Metric | Value |
-|--------|-------|
-| Scan Rate | ~2-4 wallets/second |
-| Memory Usage | < 50 MB |
-| CPU Usage | Minimal (I/O bound) |
+| Metric       | Value               |
+|--------------|---------------------|
+| Scan Rate    | ~2-4 wallets/second |
+| Memory Usage | < 50 MB             |
+| CPU Usage    | Minimal (I/O bound) |
 
 Performance varies based on network conditions and API response times.
 
@@ -354,9 +355,28 @@ This project is released under the MIT License. See LICENSE file for details.
 
 ---
 
-Programmer Telegram ID [@Mr1Mmdrza](https://t.me/Mr1Mmdrza)
+## Donations
 
-Programmer Telegram Channel [@Crypto2ools](https://t.me/Crypto2ools)
+If you find this tool useful and would like to support its development, consider making a donation:
+
+| Cryptocurrency     | Address                                        |
+|--------------------|------------------------------------------------|
+| Bitcoin (BTC)      | `1MMDRZA12xdBLD1P5AfEfvEMErp588vmF9`           |
+| Ethereum (ETH)     | `0xe81F2B5Cb602d4ea21e1b66cD0e4a192497c04f7`   |
+| Litecoin (LTC)     | `ltc1qxju6jvj64mfneswjeq7mj4lsu08nnst3pde68j`  |
+| Tron (TRX)         | `TLmnbrnA3YW1pFfu8crQpccrqJ3YukKb7U`           |
+| Dogecoin (DOGE)    | `DU3tApgDok4LE2KHc2gSaWV36FNAUnJTZJ`           |
+| Solana (SOL)       | `Ea6XkAmnWHE5BY3r27P1sESCPhFEFiBJkqKJidkYgFnJ` |
+| Bitcoin Cash (BCH) | `qzhng92dy942v5um9muy8w9y0m3et7fupvpp09sp62`   |
+
+
+> [!NOTE] 
+> You can also give just one star to support this repository, your action will encourage us.
+Thank you for your support.
+
+---
+
+
 
 > **Warning**
 > Unfortunately, due to the ignorance of some dear users, we were not informed that some profiteers and uncultured people are selling some of my scripts at a lower price. And the user does not receive anything after payment. Some of these ignorant people give malicious and viral files to users. From here, I declare that the only official source for selling my scripts is the [website](https://mmdrza.com) and [Telegram ID](https://t.me/Mr1Mmdrza) or [Telegram Channel](https://t.me/Crypto2ools).
