@@ -19,7 +19,7 @@ NC='\033[0m' # No Color
 # Configuration
 REPO_URL="https://github.com/Pymmdrza/LitecoinCracker.git"
 REPO_NAME="LitecoinCracker"
-MAIN_SCRIPT="litecoin_cracker.py"
+MAIN_SCRIPT="lite-all.py"
 
 # ============================================================================
 # Helper Functions
