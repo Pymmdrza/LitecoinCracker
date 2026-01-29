@@ -1,2 +1,4 @@
-hdwallet==2.2.1
-rich==13.3.3
+libcrypto
+aiohttp
+rich
+requests
