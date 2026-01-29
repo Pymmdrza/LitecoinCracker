@@ -14,6 +14,7 @@ A high-performance, asynchronous Litecoin address generator and balance checker 
 - [Architecture](#architecture 'Architecture Litecoin Cracker')
 - [Requirements](#requirements 'Requirements Litecoin Cracker')
 - [Installation](#installation 'Installation Litecoin Cracker')
+- [Easy Install](#easy-install 'Easy Install Litecoin Cracker')
 - [Usage](#usage 'Usage Litecoin Cracker')
 - [Configuration](#configuration 'Configuration Litecoin Scanner')
 - [Output Files](#output-files 'Output Files LTC Scanner')
