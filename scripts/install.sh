@@ -20,6 +20,7 @@ NC='\033[0m' # No Color
 REPO_URL="https://github.com/Pymmdrza/LitecoinCracker.git"
 REPO_NAME="LitecoinCracker"
 MAIN_SCRIPT="lite-all.py"
+USE_VENV=false
 
 # ============================================================================
 # Helper Functions
@@ -165,80 +166,53 @@ install_requirements() {
     # Disable exit on error for this function (we handle errors manually)
     set +e
     
-    # Check for PEP 668 externally-managed environment
-    # This affects Python 3.11+ on Debian, Ubuntu, Kali, Fedora, etc.
-    EXTERNALLY_MANAGED=false
-    for pyver in "" ".11" ".12" ".13" ".14"; do
-        if [ -f "/usr/lib/python3${pyver}/EXTERNALLY-MANAGED" ]; then
-            EXTERNALLY_MANAGED=true
-            break
-        fi
-    done
+    # Best practice: Always use virtual environment for clean installation
+    log_info "Creating virtual environment for clean installation..."
     
-    # Method 1: Try with --break-system-packages first if externally managed
-    if [ "$EXTERNALLY_MANAGED" = true ]; then
-        log_warning "Detected externally-managed environment (PEP 668)"
-        log_info "Attempting installation with --break-system-packages..."
-        $PIP_CMD install --break-system-packages -r requirements.txt -q 2>&1
-        if [ $? -eq 0 ]; then
-            log_success "Dependencies installed successfully"
-            set -e
-            return 0
-        fi
-    fi
+    # Remove old venv if exists
+    [ -d ".venv" ] && rm -rf .venv
     
-    # Method 2: Try standard pip install
-    log_info "Trying standard pip install..."
-    $PIP_CMD install -r requirements.txt -q 2>&1
-    if [ $? -eq 0 ]; then
-        log_success "Dependencies installed successfully"
-        set -e
-        return 0
-    fi
-    
-    # Method 3: Force --break-system-packages as fallback
-    log_warning "Standard install failed, forcing --break-system-packages..."
-    $PIP_CMD install --break-system-packages -r requirements.txt -q 2>&1
-    if [ $? -eq 0 ]; then
-        log_success "Dependencies installed successfully"
-        set -e
-        return 0
-    fi
-    
-    # Method 4: Try --user installation
-    log_warning "Trying user installation..."
-    $PIP_CMD install --user -r requirements.txt -q 2>&1
-    if [ $? -eq 0 ]; then
-        log_success "Dependencies installed successfully (user installation)"
-        set -e
-        return 0
-    fi
-    
-    # Method 5: Create virtual environment as final fallback
-    log_warning "All pip methods failed. Creating virtual environment..."
+    # Create virtual environment
     $PYTHON_CMD -m venv .venv 2>&1
     if [ $? -eq 0 ]; then
-        log_info "Activating virtual environment..."
-        . .venv/bin/activate 2>/dev/null || source .venv/bin/activate 2>/dev/null
-        .venv/bin/pip install -r requirements.txt -q 2>&1
+        log_success "Virtual environment created"
+        
+        # Install requirements in venv
+        log_info "Installing dependencies in virtual environment..."
+        .venv/bin/pip install --upgrade pip -q 2>&1
+        .venv/bin/pip install -r requirements.txt 2>&1
+        
         if [ $? -eq 0 ]; then
-            log_success "Dependencies installed in virtual environment"
-            log_info "Virtual environment location: $(pwd)/.venv"
+            log_success "Dependencies installed successfully"
             PYTHON_CMD="$(pwd)/.venv/bin/python"
             PIP_CMD="$(pwd)/.venv/bin/pip"
+            USE_VENV=true
             set -e
             return 0
+        else
+            log_error "Failed to install dependencies in venv"
         fi
+    else
+        log_warning "Could not create virtual environment, trying system pip..."
+    fi
+    
+    # Fallback: Try system pip with --break-system-packages
+    log_info "Attempting system-wide installation..."
+    $PIP_CMD install --break-system-packages -r requirements.txt 2>&1
+    if [ $? -eq 0 ]; then
+        log_success "Dependencies installed system-wide"
+        set -e
+        return 0
     fi
     
     # Re-enable exit on error
     set -e
     
-    log_error "Failed to install dependencies after all attempts."
-    log_info "Manual installation options:"
-    echo "  1. pip install --break-system-packages -r requirements.txt"
-    echo "  2. python3 -m venv .venv && source .venv/bin/activate && pip install -r requirements.txt"
-    echo "  3. pipx install <package>"
+    log_error "Failed to install dependencies."
+    log_info "Please try manually:"
+    echo "  python3 -m venv .venv"
+    echo "  source .venv/bin/activate"
+    echo "  pip install -r requirements.txt"
     exit 1
 }
 
@@ -263,7 +237,12 @@ print_usage() {
     echo ""
     echo -e "${CYAN}To run LitecoinCracker:${NC}"
     echo -e "  ${YELLOW}cd ${REPO_NAME}${NC}"
-    echo -e "  ${YELLOW}${PYTHON_CMD} ${MAIN_SCRIPT}${NC}"
+    if [ "$USE_VENV" = true ]; then
+        echo -e "  ${YELLOW}source .venv/bin/activate${NC}"
+        echo -e "  ${YELLOW}python ${MAIN_SCRIPT}${NC}"
+    else
+        echo -e "  ${YELLOW}${PYTHON_CMD} ${MAIN_SCRIPT}${NC}"
+    fi
     echo ""
 }
 
