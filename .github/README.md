@@ -1,6 +1,6 @@
 # Litecoin Wallet Scanner - Professional Edition
 
-![](https://raw.githubusercontent.com/Pymmdrza/LitecoinCracker/refs/heads/mainx/_m/ltc_scanner_screenshot.png 'Litecoin Scanner Script v2.0.1')
+![Litecoin Wallet Scanner](https://raw.githubusercontent.com/Pymmdrza/LitecoinCracker/refs/heads/mainx/_m/ltc_scanner_screenshot.png 'Litecoin Scanner Script v2.0.1')
 
 A high-performance, asynchronous Litecoin address generator and balance checker built with modern Python practices and professional-grade architecture.
 
@@ -20,8 +20,9 @@ A high-performance, asynchronous Litecoin address generator and balance checker 
 - [Project Structure](#project-structure 'Project Structure Scanner')
 - [Technical Details](#technical-details 'Technical Details Litecoin Cracker')
 - [License](#license 'MIT License')
+- [Changelog](#changelog 'Changelog - LTC CRACKER')
 - [Contact](#contact 'Contact')
-- [Donations](#donations 'Donations Litecoin Scanner Programmer')
+- [Donations](#donations 'Donations - Litecoin Cracker v2.0.1')
 
 ---
 
@@ -180,7 +181,8 @@ Press `Ctrl+C` to initiate graceful shutdown. The application will:
 
 ## Configuration
 
-Configuration is managed through the `Config` dataclass. Modify these values to customize behavior:
+> [!NOTE]
+> Configuration is managed through the `Config` dataclass. Modify these values to customize behavior:
 
 ```python
 @dataclass(frozen=True)
@@ -323,7 +325,9 @@ Performance varies based on network conditions and API response times.
 
 ## Disclaimer
 
-This software is provided for educational and research purposes only. The probability of finding a wallet with a positive balance is astronomically low due to the cryptographic security of private keys. Users are responsible for ensuring compliance with applicable laws and regulations in their jurisdiction.
+> [!IMPORTANT]
+> This software is provided for educational and research purposes only. The probability of finding a wallet with a positive balance is astronomically low due to the cryptographic security of private keys. Users are responsible for ensuring compliance with applicable laws and regulations in their jurisdiction.
+
 
 ---
 
@@ -359,6 +363,10 @@ This project is released under the MIT License. See LICENSE file for details.
 
 If you find this tool useful and would like to support its development, consider making a donation:
 
+> [!TIP] 
+> You can also give just one star to support this repository, your action will encourage us.
+Thank you for your support.
+
 | Cryptocurrency     | Address                                        |
 |--------------------|------------------------------------------------|
 | Bitcoin (BTC)      | `1MMDRZA12xdBLD1P5AfEfvEMErp588vmF9`           |
@@ -370,13 +378,10 @@ If you find this tool useful and would like to support its development, consider
 | Bitcoin Cash (BCH) | `qzhng92dy942v5um9muy8w9y0m3et7fupvpp09sp62`   |
 
 
-> [!NOTE] 
-> You can also give just one star to support this repository, your action will encourage us.
-Thank you for your support.
 
 ---
 
 
 
-> **Warning**
-> Unfortunately, due to the ignorance of some dear users, we were not informed that some profiteers and uncultured people are selling some of my scripts at a lower price. And the user does not receive anything after payment. Some of these ignorant people give malicious and viral files to users. From here, I declare that the only official source for selling my scripts is the [website](https://mmdrza.com) and [Telegram ID](https://t.me/Mr1Mmdrza) or [Telegram Channel](https://t.me/Crypto2ools).
+> [!CAUTION]
+> **Warning** : Unfortunately, due to the ignorance of some dear users, we were not informed that some profiteers and uncultured people are selling some of my scripts at a lower price. And the user does not receive anything after payment. Some of these ignorant people give malicious and viral files to users. From here, I declare that the only official source for selling my scripts is the [website](https://mmdrza.com) and [Telegram ID](https://t.me/Mr1Mmdrza) or [Telegram Channel](https://t.me/Crypto2ools).
