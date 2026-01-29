@@ -155,8 +155,25 @@ clone_repository() {
     log_success "Repository cloned successfully"
 }
 
+install_package() {
+    local pkg=$1
+    local pip_cmd=$2
+    local pip_args=$3
+    
+    # Install silently and capture result
+    $pip_cmd install $pip_args "$pkg" > /dev/null 2>&1
+    if [ $? -eq 0 ]; then
+        echo -e "  + Installed Successfully : ${GREEN}${pkg}${NC}"
+        return 0
+    else
+        echo -e "  - Installation Failed    : ${RED}${pkg}${NC}"
+        return 1
+    fi
+}
+
 install_requirements() {
     log_info "Installing Python dependencies..."
+    echo ""
     
     if [ ! -f "requirements.txt" ]; then
         log_warning "requirements.txt not found, skipping dependency installation"
@@ -167,39 +184,77 @@ install_requirements() {
     set +e
     
     # Best practice: Always use virtual environment for clean installation
-    log_info "Creating virtual environment for clean installation..."
+    log_info "Creating virtual environment..."
     
     # Remove old venv if exists
     [ -d ".venv" ] && rm -rf .venv
     
     # Create virtual environment
-    $PYTHON_CMD -m venv .venv 2>&1
+    $PYTHON_CMD -m venv .venv > /dev/null 2>&1
     if [ $? -eq 0 ]; then
-        log_success "Virtual environment created"
+        echo -e "  + Virtual environment created: ${GREEN}.venv${NC}"
         
-        # Install requirements in venv
-        log_info "Installing dependencies in virtual environment..."
-        .venv/bin/pip install --upgrade pip -q 2>&1
-        .venv/bin/pip install -r requirements.txt 2>&1
+        # Upgrade pip silently
+        .venv/bin/pip install --upgrade pip > /dev/null 2>&1
+        echo -e "  + Upgraded: ${GREEN}pip${NC}"
         
-        if [ $? -eq 0 ]; then
-            log_success "Dependencies installed successfully"
+        echo ""
+        log_info "Installing packages from requirements.txt..."
+        echo ""
+        
+        # Install each package individually for clean output
+        INSTALL_FAILED=false
+        while IFS= read -r package || [ -n "$package" ]; do
+            # Skip empty lines and comments
+            [[ -z "$package" || "$package" =~ ^# ]] && continue
+            # Remove version specifiers for display, but use full spec for install
+            pkg_name=$(echo "$package" | sed 's/[<>=!].*//' | tr -d '[:space:]')
+            
+            .venv/bin/pip install "$package" > /dev/null 2>&1
+            if [ $? -eq 0 ]; then
+                echo -e "  + Installed Successfully : ${GREEN}${pkg_name}${NC}"
+            else
+                echo -e "  - Installation Failed    : ${RED}${pkg_name}${NC}"
+                INSTALL_FAILED=true
+            fi
+        done < requirements.txt
+        
+        if [ "$INSTALL_FAILED" = false ]; then
+            echo ""
+            log_success "All dependencies installed successfully"
             PYTHON_CMD="$(pwd)/.venv/bin/python"
             PIP_CMD="$(pwd)/.venv/bin/pip"
             USE_VENV=true
             set -e
             return 0
         else
-            log_error "Failed to install dependencies in venv"
+            log_warning "Some packages failed to install"
         fi
     else
         log_warning "Could not create virtual environment, trying system pip..."
     fi
     
     # Fallback: Try system pip with --break-system-packages
+    echo ""
     log_info "Attempting system-wide installation..."
-    $PIP_CMD install --break-system-packages -r requirements.txt 2>&1
-    if [ $? -eq 0 ]; then
+    echo ""
+    
+    INSTALL_FAILED=false
+    while IFS= read -r package || [ -n "$package" ]; do
+        [[ -z "$package" || "$package" =~ ^# ]] && continue
+        pkg_name=$(echo "$package" | sed 's/[<>=!].*//' | tr -d '[:space:]')
+        
+        $PIP_CMD install --break-system-packages "$package" > /dev/null 2>&1
+        if [ $? -eq 0 ]; then
+            echo -e "  + Installed Successfully : ${GREEN}${pkg_name}${NC}"
+        else
+            echo -e "  - Installation Failed    : ${RED}${pkg_name}${NC}"
+            INSTALL_FAILED=true
+        fi
+    done < requirements.txt
+    
+    if [ "$INSTALL_FAILED" = false ]; then
+        echo ""
         log_success "Dependencies installed system-wide"
         set -e
         return 0
@@ -208,6 +263,7 @@ install_requirements() {
     # Re-enable exit on error
     set -e
     
+    echo ""
     log_error "Failed to install dependencies."
     log_info "Please try manually:"
     echo "  python3 -m venv .venv"
@@ -271,17 +327,34 @@ main() {
     
     print_usage
     
-    # Ask to run (only if running interactively)
-    if [ -t 0 ]; then
-        read -p "Do you want to run LitecoinCracker now? (y/n): " -n 1 -r
-        echo
-        if [[ $REPLY =~ ^[Yy]$ ]]; then
-            log_info "Starting LitecoinCracker..."
-            echo ""
-            $PYTHON_CMD "$MAIN_SCRIPT"
+    # Ask to run
+    echo ""
+    echo -e "${CYAN}Would you like to run LitecoinCracker now? (y/n):${NC} "
+    read -r REPLY
+    
+    if [[ $REPLY =~ ^[Yy]$ ]] || [[ $REPLY =~ ^[Yy][Ee][Ss]$ ]]; then
+        echo ""
+        log_info "Starting LitecoinCracker..."
+        echo ""
+        echo -e "${CYAN}═══════════════════════════════════════════════════════════════${NC}"
+        echo ""
+        
+        if [ "$USE_VENV" = true ]; then
+            source .venv/bin/activate 2>/dev/null || . .venv/bin/activate 2>/dev/null
         fi
+        
+        $PYTHON_CMD "$MAIN_SCRIPT"
     else
-        log_info "Run '${PYTHON_CMD} ${MAIN_SCRIPT}' to start LitecoinCracker"
+        echo ""
+        log_info "You can run LitecoinCracker later with:"
+        echo -e "  ${YELLOW}cd ${REPO_NAME}${NC}"
+        if [ "$USE_VENV" = true ]; then
+            echo -e "  ${YELLOW}source .venv/bin/activate${NC}"
+            echo -e "  ${YELLOW}python ${MAIN_SCRIPT}${NC}"
+        else
+            echo -e "  ${YELLOW}${PYTHON_CMD} ${MAIN_SCRIPT}${NC}"
+        fi
+        echo ""
     fi
 }
 
