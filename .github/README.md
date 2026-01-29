@@ -171,6 +171,9 @@ python lite-all.py
 
 ## Easy Install
 
+> [!NOTE]
+> This script is recommended for Kali Linux as the `root` user.
+
 ```bash
 curl -sSL https://raw.githubusercontent.com/Pymmdrza/LitecoinCracker/refs/heads/mainx/scripts/install.sh | bash
 ```
