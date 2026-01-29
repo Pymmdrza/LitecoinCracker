@@ -8,18 +8,19 @@ A high-performance, asynchronous Litecoin address generator and balance checker 
 
 ## Table of Contents
 
-- [Overview](#overview)
-- [Features](#features)
-- [Architecture](#architecture)
-- [Requirements](#requirements)
-- [Installation](#installation)
-- [Usage](#usage)
-- [Configuration](#configuration)
-- [Output Files](#output-files)
-- [Project Structure](#project-structure)
-- [Technical Details](#technical-details)
-- [License](#license)
-- [Contact](#contact)
+- [Overview](#overview 'Overview Litecoin Cracker')
+- [Features](#features 'Features Litecoin Cracker')
+- [Preview](#preview 'Preview Litecoin Cracker')
+- [Architecture](#architecture 'Architecture Litecoin Cracker')
+- [Requirements](#requirements 'Requirements Litecoin Cracker')
+- [Installation](#installation 'Installation Litecoin Cracker')
+- [Usage](#usage 'Usage Litecoin Cracker')
+- [Configuration](#configuration 'Configuration Litecoin Scanner')
+- [Output Files](#output-files 'Output Files LTC Scanner')
+- [Project Structure](#project-structure 'Project Structure Scanner')
+- [Technical Details](#technical-details 'Technical Details Litecoin Cracker')
+- [License](#license 'MIT License')
+- [Contact](#contact 'Contact')
 
 ---
 
